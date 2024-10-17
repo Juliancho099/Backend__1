@@ -1,0 +1,16 @@
+[
+     {
+          "id": 1,
+          "title": "soy el titulo del la id 1",
+          "description": "hola soy un producto nuevo del id 1",
+          "code": "NP01",
+          "price": 2000,
+          "status": true,
+          "stock": 20,
+          "category": "perro2",
+          "thumbnails": [
+               "perro.jpg",
+               "perro2.jpg"
+          ]
+     }
+]
