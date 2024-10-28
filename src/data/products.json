@@ -1,16 +1,41 @@
 [
      {
           "id": 1,
-          "title": "soy el titulo del la id 1",
-          "description": "hola soy un producto nuevo del id 1",
+          "title": "producto",
+          "description": "pantalon azun",
           "code": "NP01",
           "price": 2000,
           "status": true,
           "stock": 20,
-          "category": "perro2",
+          "category": "PANTALONES",
           "thumbnails": [
-               "perro.jpg",
-               "perro2.jpg"
+               "https://firebasestorage.googleapis.com/v0/b/yanbal-con-stefany.appspot.com/o/Accesorios%2F25038464-01-removebg-preview.png?alt=media&token=4679f7fc-a82d-4cea-8b8b-9c6215c478bf"
+          ]
+     },
+     {
+          "id": 2,
+          "title": "producto",
+          "description": "pantalon azun",
+          "code": "NP02",
+          "price": 2000,
+          "status": true,
+          "stock": 3000,
+          "category": "PANTALONES",
+          "thumbnails": [
+               "https://firebasestorage.googleapis.com/v0/b/yanbal-con-stefany.appspot.com/o/Accesorios%2F25038464-01-removebg-preview.png?alt=media&token=4679f7fc-a82d-4cea-8b8b-9c6215c478bf"
+          ]
+     },
+     {
+          "id": 3,
+          "title": "producto",
+          "description": "pantalon azun",
+          "code": "NP03",
+          "price": 2000,
+          "status": false,
+          "stock": 1,
+          "category": "PANTALONES",
+          "thumbnails": [
+               "https://firebasestorage.googleapis.com/v0/b/yanbal-con-stefany.appspot.com/o/Accesorios%2F25038464-01-removebg-preview.png?alt=media&token=4679f7fc-a82d-4cea-8b8b-9c6215c478bf"
           ]
      }
 ]

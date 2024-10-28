@@ -55,15 +55,11 @@ class ProductManager {
     }
 
     async addProducts(title, description, code, price, status, stock, category, thumbnails=['default.jpg']){
-        productValidation(title, description, code, price, status, stock, category, thumbnails)
+        await productValidation(title, description, code, price, status, stock, category, thumbnails)
 
         try {
             const data = await this.getProducts();
-            const productoExistente = data.find(p=> p.code === code);
-
-            if(productoExistente){
-                throw new Error('el producto ya existe')
-            }
+            
 
             const id = data.length > 0 ? data[data.length - 1].id + 1: 1
             const newProduct = {

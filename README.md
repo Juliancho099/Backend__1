@@ -1,4 +1,4 @@
-Proyecto Backend Julian Tocano
+Proyecto Backend Julian Toscano
 
 En esta primera instancia, la funcionalidad de este repositorio es entregar un primer trabajo requerido por coderhouse cursada backed numero 1.
 
@@ -12,7 +12,16 @@ Podras encontrar en este repo la funcionalidad de un servidro el cual esta apunt
 
 Una vez realizado los pasos anteriores te dejo aqui todas las solicitudes que le podras hacer al servidor
 
+//Pre-Entrega 2
 
+Aqui podras encontrar nuevas actualizaciones, tendras un sistema de entorno grafico para agregar productos y eliminarlos, se le agregaron alertas para diferentes eventos y nuevas libreriras para lograr comunicar al servidor con el cliente.
+
+Librerias nuevas tales como socket.io  para la comunicacion cliente servidor, logrando asi que, halla una interaccion mayor.
+
+Tambien se ajustaron un poco las validaciones para que lograran emitirse los mensajes correspondientes de manera adecuada, la persistencia de datos aun sigue de manera local pero proximamente se añadira una base de datos en la nube.
+
+
+//Pre-Entrega-1
 Solicitudes GET:
 PRODUCTS
 1. http://localhost:8080/api/products Aqui podras listar todos los productos
