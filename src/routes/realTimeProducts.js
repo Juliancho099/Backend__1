@@ -9,9 +9,7 @@ router.get("/", async (req, res) => {
     try {
         const productos = await products.getProducts(limit)
         res.render("realTimeProducts",{
-            css: 'styles.css',
-            style: 'nav.css',
-            styles:'products.css',
+            style: 'todo.css',
             products: productos
         });
     } catch (error) {

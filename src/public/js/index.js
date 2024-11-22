@@ -1,181 +1,148 @@
+const botones = document.querySelectorAll('.addCart');
+const addToCart = async (id, buttonElement) => {
+    try {
+        const quantity = parseInt(buttonElement.closest('.descripciones').querySelector('.quantityP').value);
+        if (quantity <= 0) {
+            alert('La cantidad debe ser mayor a 0');
+            return;
+        }
+        const idCart = buttonElement.parentElement.querySelector('#cartId').value;
+        const response = await fetch(`/api/carts/${idCart}/products/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                quantity: quantity
+            })
 
-const socket = io()
-
-let addProduct = document.querySelector('#formProducts'),
-    delProduct = document.querySelector('#formDelProducts');
-    containerProducts = document.querySelector('.contenedorProductos')
-
-console.log(addProduct)
-console.log(delProduct)
-addProduct.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const data = {
-        title: document.querySelector('#titulo').value.trim(),
-        description: document.querySelector('#descripcion').value.trim(),
-        code: document.querySelector('#code').value.trim(),
-        price: document.querySelector('#precio').value.trim(),
-        status: document.querySelector('#status').value === "true",
-        stock: document.querySelector('#stock').value.trim(),
-        category: document.querySelector('#categoria').value.trim(),
-        thumbnails: document.querySelector('#imagenes').value.split(",").map(url => url.trim())
-    };
-
-
-    socket.emit('addProduct', data)
-
-    addProduct.reset();
-});
-
-
-
-delProduct.addEventListener('submit', (e) => {
-    e.preventDefault()
-
-    const id = parseInt(document.querySelector('#id').value)
-    if(id <=0){
-        return Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "id no valido",
-            showConfirmButton: false,
-            timer: 1500
-        })
-    }
-    console.log('datos enviados de la id:', id)
-    socket.emit('delProduct', id)
-
-    delProduct.reset()
-})
-
-
-const renderProducts= (productos)=>{
-
-    containerProducts.innerHTML = ''
-
-    productos.forEach(product => {
-    
-        const productDiv = document.createElement('div');
-        productDiv.classList.add('product');
-
-        const imgContain = document.createElement('div');
-        imgContain.classList.add('imgContain');
-        
-        const img = document.createElement('img');
-        img.src = product.thumbnails[0];
-        img.alt = product.title;
-        imgContain.appendChild(img);
-
-        // Crear contenedor de descripción
-        const descripcionDiv = document.createElement('div');
-        descripcionDiv.classList.add('descripcion');
-        
-        const title = document.createElement('h3');
-        title.classList.add('productTitle');
-        title.textContent = product.title;
-
-        const descripcionesDiv = document.createElement('div');
-        descripcionesDiv.classList.add('descripciones');
-
-        const fields = [
-            { label: 'Descripción:', value: product.description, class: 'des' },
-            { label: 'Categoría:', value: product.category, class: 'categoria' },
-            { label: 'Código:', value: product.code, class: 'code' },
-            { label: 'ID:', value: product.id, class: 'id' },
-            { label: 'Precio:', value: product.price, class: 'price' },
-            { label: 'Estado:', value: product.status ? 'Activo' : 'Inactivo', class: 'status' },
-            { label: 'Stock:', value: product.stock, class: 'stock' }
-        ];
-
-        fields.forEach(field => {
-            const descriptionDiv = document.createElement('div');
-            descriptionDiv.classList.add('description', field.class);
-
-            const label = document.createElement('small');
-            label.textContent = field.label;
-
-            const value = document.createElement('p');
-            field.class ==='status' && (value.style.color = field.value === 'Activo' ? 'green' : 'red')
-            value.textContent = field.value;
-
-            descriptionDiv.appendChild(label);
-            descriptionDiv.appendChild(value);
-            descripcionesDiv.appendChild(descriptionDiv);
         });
 
-        descripcionDiv.appendChild(title);
-        descripcionDiv.appendChild(descripcionesDiv);
-        productDiv.appendChild(imgContain);
-        productDiv.appendChild(descripcionDiv);
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Producto agregado al carrito:', data);
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "producto agregado correctamente",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else {
+            console.error('Error al agregar el producto al carrito');
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Upps!, no se pudo añadir el producto",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
 
-        // Añadir producto a la lista
-        containerProducts.appendChild(productDiv);
-    });
-        
+    } catch (error) {
+        console.error('Error al agregar el producto al carrito:', error);
+    }
 }
 
+const createCart = async () => {
+    try {
+        const response = await fetch('/api/carts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            alert('Carrito creado:', data);
+        } else {
+            console.error('Error al crear el carrito');
+        }
 
-socket.emit('getProducts')
+        window.location.reload();
+    } catch (error) {
+        console.error('Error al crear el carrito:', error);
+    }
+}
 
-socket.on('error', (error) => {
-    Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: error,
-        showConfirmButton: false,
-        timer: 1500
-    });
-})
+const deleteCart = async (id) => {
+    try {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
 
-socket.on('message', (message) => {
-    Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: message,
-        showConfirmButton: false,
-        timer: 1500
-    });
-})
+        const result = await swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        });
 
+        if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire(
+                "Cancelled",
+                "Your cart items are safe :)",
+                "error"
+            );
+            return;
+        }
+        const response = await fetch(`/api/carts/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.status === 400) {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "No hay productos a eliminar",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            return;
+        }
 
-socket.on('productoAñadido', () => {
-    socket.emit('getProducts')
-})
+        const resultData = await response.json();
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `Productos eliminados correctamente del carrito ${resultData._id}`,
+            showConfirmButton: false,
+            timer: 1500
+        });
 
-socket.on('products', (products) => {
-    renderProducts(products)
-})
+    } catch (error) {
+        // 4. Manejo de errores en caso de falla en el servidor
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Ocurrió un error al intentar eliminar el carrito",
+            showConfirmButton: false,
+            timer: 1500
+        });
+        console.error('Error al eliminar el carrito:', error);
+    }
+}
 
-socket.on('eliminado', (id) =>{
-    socket.emit('getProducts')
-    Swal.fire({
-        icon: 'success',
-        title: 'Producto eliminado',
-        text: `El producto con ID ${id} fue eliminado correctamente`,
-        timer: 2000,
-        showConfirmButton: false,
-        position: 'top-end'
-    });
-})
+const deleteProduct = async (cid,pid) => {
+    try {
+        const response = await fetch(`/api/carts/${cid}/products/${pid}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Producto eliminado del carrito:', data);
+        } else {
+            console.error('Error al eliminar el producto del carrito');
+        }
+    } catch (error) {
+        console.error('Error al eliminar el producto del carrito:', error);
+    }
 
-socket.on('errorDel', (errorMsg) => {
-    Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: errorMsg,
-        timer: 2000,
-        showConfirmButton: false,
-        position: 'top-end'
-    });
-});
-
-socket.on('notFound', (errorMsg) => {
-    Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: errorMsg,
-        timer: 2000,
-        showConfirmButton: false,
-        position: 'top-end'
-    });
-});
+    window.location.reload();
+}

@@ -1,14 +1,14 @@
-import ProductManager from '../dao/productManager.js'; // ajusta la ruta según sea necesario
+import {ProductMongoManager as ProductManager} from '../dao/ProductMongoManager.js'; // ajusta la ruta según sea necesario
 
-const productValidation = async (title, description, code, price, status, stock, category, thumbnail) => {
+const productValidation = async (title, description, code, price, status, stock, category, thumbnails) => {
     const productos = new ProductManager();
 
     try {
         const data = await productos.getProducts();
-        const productoExistente = data.find(p => p.code === code);
+        const productoExistente = data.payload.find(p => p.code === code);
 
         
-        if (!title || !description || !code || !price || status === undefined || !stock || !category || !thumbnail) {
+        if (!title || !description || !code || !price || status === undefined || !stock || !category || !thumbnails) {
             throw new Error('Todos los campos son obligatorios');
         }
     
@@ -28,8 +28,8 @@ const productValidation = async (title, description, code, price, status, stock,
             throw new Error('price y stock deben ser mayor a 0');
         }
     
-        if (thumbnail && (!Array.isArray(thumbnail) || !thumbnail.every(item => typeof item === 'string'))) {
-            throw new Error('thumbnail debe ser un array de strings');
+        if (thumbnails && (!Array.isArray(thumbnails) || !thumbnails.every(item => typeof item === 'string'))) {
+            throw new Error('thumbnails debe ser un array de strings');
         }
 
         if (productoExistente) {

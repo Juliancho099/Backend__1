@@ -1,13 +1,13 @@
 [
      {
           "id": 1,
-          "title": "producto",
-          "description": "pantalon azun",
+          "title": "hola julian titulo actualizado",
+          "description": "hola soy un nuevo producto con titulo actualizado",
           "code": "NP01",
           "price": 2000,
           "status": true,
           "stock": 20,
-          "category": "PANTALONES",
+          "category": "pantalones",
           "thumbnails": [
                "https://firebasestorage.googleapis.com/v0/b/yanbal-con-stefany.appspot.com/o/Accesorios%2F25038464-01-removebg-preview.png?alt=media&token=4679f7fc-a82d-4cea-8b8b-9c6215c478bf"
           ]

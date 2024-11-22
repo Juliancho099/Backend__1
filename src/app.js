@@ -1,14 +1,15 @@
 import express from 'express'
-import initSocket from './dao/socket.js'
 import productRouter from './routes/productRouter.js'
 import cartRouter from './routes/cartRoutes.js'
 import realTimeProducts from './routes/realTimeProducts.js'
 import home from './routes/home.js'
-import { engine } from 'express-handlebars'
-
+import routercarts from './routes/routercarts.js'
+import  {engine}  from 'express-handlebars'
+import { config } from './config/config.js'
+import { conectarDB } from './connDB.js'
 
 const app =express()
-const PORT = 8080;
+const PORT = config.PORT || 8080;
 
 
 app.use(express.json());
@@ -23,18 +24,18 @@ app.set('views', './src/views');
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/realtimeproducts', realTimeProducts);
-app.use('/', home);
+app.use('/products', home);
+app.use('/carts', routercarts);
+app.get('/', (req, res)=>{
+    res.send('<h1>Home</h1>, <a href="/products">Productos</a>');
+});
 
 
 
 
-app.get('/',(req,res) =>{
-    res.send('todo ok')
-})
 
-
-const server = app.listen(PORT, ()=>{
+app.listen(PORT, ()=>{
     console.log(`server on en http://localhost:${PORT}`)
 })
 
-initSocket(server)
+conectarDB(config.MOONGODB, config.DBNAME)

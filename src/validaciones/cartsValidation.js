@@ -1,4 +1,4 @@
-import ProductManager from "../dao/productManager.js";
+import {ProductMongoManager as ProductManager} from "../dao/ProductMongoManager.js";
 const productos = new ProductManager()
 
 const cartsValidation = async (id, productId, quantity)=>{
@@ -14,7 +14,7 @@ const cartsValidation = async (id, productId, quantity)=>{
         throw new Error('Todos los campos son obligatorios');
     }
 
-    if ( typeof productId === 'string' || typeof quantity !== 'number' || typeof id === 'string') {
+    if ( typeof productId !== 'string' || typeof quantity !== 'number' || typeof id !== 'string') {
         throw new Error('id, productId y quantity son de tipo number');
     }
     

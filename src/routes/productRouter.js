@@ -1,13 +1,13 @@
 import express from 'express';
-import ProductManager from '../dao/productManager.js';
+import { ProductMongoManager as ProductManager } from '../dao/ProductMongoManager.js';
 
 const router = express.Router()
 const products = new ProductManager();
 
 router.get('/', async (req, res)=>{
-    const limit = parseInt(req.query.limit) || 10
+    const {limit, sort, query} = req.query;
     try {
-        const productos = await products.getProducts(Number(limit))
+        const productos = await products.getProducts(limit, sort, query)
         productos ? res.status(200).json(productos) : res.status(404).json({error: error.message})
     } catch (error) {
         res.status(500).json({error: error.message})
@@ -18,16 +18,17 @@ router.get('/:id', async (req, res)=>{
     const {id} = req.params
     try {
         const producto = await products.getProductsById(id)
-        producto ? res.status(200).json(producto) : res.status(404).json({error: error.message, id: id})
+        if(!producto) return res.status(404).json({'error': 'producto no encontrado'})
+        res.status(200).json({producto})
     } catch (error) {
-        res.status(500).json({error: error.message, id: id})
+        res.status(500).json({error: error.message})
     }
 })
 
 router.post('/', async (req,res)=>{
-    const {title, description, code, price, status, stock, category, thumbnail} = req.body
+    const {title, description, code, price, status, stock, category, thumbnails} = req.body
     try {
-        const newProduct = await products.addProducts(title, description, code, price, status, stock, category, thumbnail)
+        const newProduct = await products.addProducts(title, description, code, price, status, stock, category, thumbnails)
         newProduct && res.status(201).json(newProduct) 
     } catch (error) {
         res.status(500).json({error: error.message})
@@ -36,10 +37,10 @@ router.post('/', async (req,res)=>{
 
 router.put('/:pid', async(req, res)=>{
     const {pid}= req.params
-    const {title, description, code, price, status, stock, category, thumbnail} = req.body
+    const {title, description, code, price, status, stock, category, thumbnails} = req.body
 
     try {
-        const updateProductlist = await products.updateProduct(Number(pid), {title, description, code, price, status, stock, category, thumbnail})
+        const updateProductlist = await products.updateProduct(pid, {title, description, code, price, status, stock, category, thumbnails})
         updateProductlist ? res.status(200).json(updateProductlist) : res.status(404).json({error: error.message})
     } catch (error) {
         res.status(500).json({error: error.message})
@@ -50,7 +51,7 @@ router.put('/:pid', async(req, res)=>{
 router.delete('/:pid', async(req, res)=>{
     const {pid}= req.params
     try {
-        const deleteProduct = await products.deleteProduct(Number(pid))
+        const deleteProduct = await products.deleteProduct(pid)
         deleteProduct ? res.status(200).json(deleteProduct) : res.status(404).json({error: error.message})
     } catch (error) {
         res.status(500).json({error: error.message})
