@@ -1,5 +1,5 @@
-import { productosModel } from "./models/productsModel.js";
 import productValidation from "../validaciones/productsValidation.js";
+import {productosModel} from './models/productsModel.js'
 
 export class ProductMongoManager {
     constructor() {
@@ -7,22 +7,20 @@ export class ProductMongoManager {
 
     }
 
-    async getProducts(limit, sort = "asc", query, page) {
-        limit = parseInt(limit) || 10
+    async getProducts(limit, sortOptions, queryOptions, page) {
         try {
-            const sortOptions = sort === 'des' ? { price: -1 } : { price: 1 }; 
-            const queryOptions = query ? { category: query } : {};
-    
+
+
             const result = await productosModel.paginate(
                 queryOptions, { limit, sort: sortOptions, page: page, lean: true }
             );
-            result.prevLink = result.hasPrevPage ? `http://localhost:8080?page=${result.prevPage}` : '';
-            result.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
-            
-            result.isValid = !(page <= 0 || page > result.totalPages);
+
+            if (!result) {
+                throw new Error('No se encontraron productos');
+            }
             // Opcional: Crear un objeto con los datos paginados y propiedades adicionales
             this.productos = {
-                status: result ? 'succes' : 'error',
+                status: result ? 'success' : 'error',
                 payload: result.docs,
                 totalPages: result.totalPages,
                 prevPage: result.prevPage,
@@ -30,9 +28,9 @@ export class ProductMongoManager {
                 page: result.page,
                 hasNextPage: result.hasNextPage,
                 hasPrevPage: result.hasPrevPage,
-                prevLink: result.hasPrevPage === false ? null : result.prevLink,
-                nextLink: result.hasNextPage === false ? null : result.nextLink,
-            };
+                prevLink: result.hasPrevPage === false ? null : `http://localhost:8080?limit=${limit}&page=${result.prevPage}`,
+                nextLink: result.hasNextPage === false ? null : `http://localhost:8080?limit=${limit}&page=${result.nextPage}`
+            }
     
             return this.productos;
         } catch (error) {

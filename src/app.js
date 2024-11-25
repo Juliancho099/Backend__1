@@ -1,9 +1,7 @@
 import express from 'express'
 import productRouter from './routes/productRouter.js'
 import cartRouter from './routes/cartRoutes.js'
-import realTimeProducts from './routes/realTimeProducts.js'
-import home from './routes/home.js'
-import routercarts from './routes/routercarts.js'
+import viewRouter from './routes/views.js'
 import  {engine}  from 'express-handlebars'
 import { config } from './config/config.js'
 import { conectarDB } from './connDB.js'
@@ -23,11 +21,9 @@ app.set('views', './src/views');
 
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
-app.use('/realtimeproducts', realTimeProducts);
-app.use('/products', home);
-app.use('/carts', routercarts);
+app.use('/', viewRouter);
 app.get('/', (req, res)=>{
-    res.send('<h1>Home</h1>, <a href="/products">Productos</a>');
+    res.send('todo 0k');
 });
 
 

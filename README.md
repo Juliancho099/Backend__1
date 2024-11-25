@@ -22,6 +22,21 @@ page: indica la pagina que queres visitar
 sort: asc: ordena precio de manera ascendente. des: ordena de manera descendente
 hay varias funcionalidades agregadas al maager de carritos y se actualizo todos los datos para que estos sean almacenados a una base de datos en mongoAtlas.
 
+formato para actualizar el carrito con un array de productos:
+
+{
+  "products": [
+    {
+      "product": "672c30fb8943363db2646729",
+      "quantity": 2
+    },
+    {
+      "product": "672c31048943363db264672c",
+      "quantity": 1
+    }
+  ]
+}
+
 //Pre-Entrega 2
 
 Aqui podras encontrar nuevas actualizaciones, tendras un sistema de entorno grafico para agregar productos y eliminarlos, se le agregaron alertas para diferentes eventos y nuevas libreriras para lograr comunicar al servidor con el cliente.

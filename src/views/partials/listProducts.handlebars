@@ -53,7 +53,7 @@
                             {{/each}}
                         </select>
                         {{else}}
-                        <p>No hay carritos</p>
+                        <p>No hay carritos?, porque no te lo creas?<span><button onclick="createCart()">crea un carrito</button></span></p>
                         {{/if}}
                         <button onclick="addToCart('{{id}}', this)" class="addCart">add to cart</button>
                     </div>
@@ -66,17 +66,17 @@
     </div>
 
     <div class="paginacion">
-        {{#if products.hasPrevPage}}
-        <a href="/products?page={{products.prevPage}}">Pág.Prev.</a>
-        {{/if}}
+    {{#if products.hasPrevPage}}
+    <a href="/products?limit={{../limit}}&page={{products.prevPage}}&sort={{../sort}}&query={{../query}}">Pág.Prev.</a>
+    {{/if}}
 
-        <p>{{products.page}}</p>
+    <p>Página actual: {{products.page}}</p>
 
-        {{#if products.hasNextPage}}
-        <a href="/products?page={{products.nextPage}}">Pág.Sig.</a>
-        {{/if}}
-    </div>
-    <p>Total de paginas: {{products.totalPages}}</p>
+    {{#if products.hasNextPage}}
+    <a href="/products?limit={{../limit}}&page={{products.nextPage}}&sort={{../sort}}&query={{../query}}">Pág.Sig.</a>
+    {{/if}}
+</div>
+<p>Total de páginas: {{products.totalPages}}</p>
 
 </article>
 <script src="/js/index.js"></script>

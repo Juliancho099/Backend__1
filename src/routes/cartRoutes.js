@@ -69,6 +69,8 @@ router.put('/:cid', async(req, res)=>{
     const {cid}= req.params
     const {products}= req.body
     try {
+        console.log(products);
+        console.log(cid);
         const updateCart = await carts.updateCart(cid,products)
         res.status(200).json(updateCart)
     } catch (error) {
